@@ -1,0 +1,228 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f6f9fc;
+    margin: 0;
+    padding: 0;
+}
+
+.dashboard-container {
+    max-width: 1200px;
+    width: 95%;
+    margin: 40px auto;
+    padding: 30px 40px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+h2,h3 {
+    color: #333;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+table th {
+    background: #74ebd5;
+    color: #fff;
+}
+
+.reserve-button, .cancel-button, .predict-button, .delete-all-button {
+    background: #74ebd5;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #fff;
+    margin-top: 5px;
+}
+
+.cancel-button { background: #f85c5c; }
+.delete-all-button { background: #f85c5c; width: 100%; }
+
+.auth-container {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 30px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+.auth-container input {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.auth-container button {
+    width: 100%;
+    background: #74ebd5;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #fff;
+    font-weight: bold;
+}
+
+.error { color: red; }
+
+.reserve-section, .prediction-section, .stats-section { margin-top: 30px; }
+.prediction-number { font-weight: bold; color: #333; }
+
+.status.pending {
+  color: #f39c12;
+  font-weight: bold;
+}
+.status.approved {
+  color: #27ae60;
+  font-weight: bold;
+}
+.status.rejected {
+  color: #e74c3c;
+  font-weight: bold;
+}
+.btn-approve {
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.btn-reject {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* General Admin Buttons */
+.admin-btn {
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: 0.2s ease;
+}
+
+/* Edit Button */
+.btn-edit {
+    background: #f7c948;
+    color: #333;
+    border: 1px solid #d0a700;
+}
+.btn-edit:hover {
+    background: #e0b63b;
+}
+
+/* Delete Button */
+.btn-delete {
+    background: #ff4d4d;
+    color: white;
+    border: 1px solid #d10000;
+}
+.btn-delete:hover {
+    background: #e63939;
+}
+
+/* Add Meal Button */
+.btn-add {
+    display: inline-block;
+    margin-bottom: 20px;     /* space below button */
+    margin-top: -10px;
+    background: #28a745;
+    color: white;
+    padding: 10px 18px;
+    font-size: 15px;
+    border: none;
+}
+.btn-add:hover {
+    background: #1f8a37;
+}
+
+/* Back Button */
+.btn-back {
+    background: #6c757d;
+    color: white;
+    padding: 8px 16px;
+    margin-top: 15px;   /* move the back button slightly down */
+    display: inline-block;
+}
+.btn-back:hover {
+    background: #5a6268;
+}
+
+.admin-btn.btn-edit,
+.admin-btn.btn-delete {
+    margin-top: 12px;   /* pushes buttons down */
+}
+
+/* Card details container */
+#card-section {
+    display: none; /* Hidden by default */
+    margin-top: 15px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #f9f9f9;
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Card input fields */
+#card-section input[type="text"],
+#card-section input[type="password"] {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border 0.2s ease;
+}
+
+/* Input focus effect */
+#card-section input[type="text"]:focus,
+#card-section input[type="password"]:focus {
+    border-color: #4a90e2;
+    outline: none;
+}
+
+/* Pay button inside card section */
+#card-section .reserve-button {
+    width: 100%;
+    padding: 10px 0;
+    background: linear-gradient(135deg, #4a90e2, #357ab7);
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#card-section .reserve-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+    background: linear-gradient(135deg, #357ab7, #4a90e2);
+}

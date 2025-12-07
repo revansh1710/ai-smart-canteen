@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+.add-meal-container {
+    max-width: 600px;
+    margin: 40px auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.add-meal-container h2 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.add-meal-container label {
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
+}
+
+.add-meal-container input,
+.add-meal-container textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.add-meal-container button {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+.add-btn {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.add-btn:hover {
+    background-color: #218838;
+}
+
+.back-btn {
+    background-color: #6c757d;
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.back-btn:hover {
+    background-color: #5a6268;
+}
+</style>
+
+<div class="add-meal-container">
+    <h2>Add New Meal</h2>
+
+    <form action="" method="POST" enctype="multipart/form-data">
+        <label for="name">Name:</label>
+        <input type="text" name="name" id="name" required>
+
+        <label for="price">Price (£):</label>
+        <input type="number" name="price" id="price" step="0.01" required>
+
+        <label for="desc">Description:</label>
+        <textarea name="desc" id="desc" required></textarea>
+
+        <label for="stock">Stock:</label>
+        <input type="number" name="stock" id="stock" required>
+
+        <label for="image">Image:</label>
+        <input type="file" name="image" id="image" required>
+
+        <button type="submit" class="add-btn">Add Meal</button>
+    </form>
+
+    <a href="{{ url_for('admin_dashboard_menu') }}" class="back-btn">Back to Menu</a>
+</div>
+{% endblock %}

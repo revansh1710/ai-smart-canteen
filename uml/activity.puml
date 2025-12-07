@@ -1,0 +1,10 @@
+@startuml
+start
+:User Login;
+if (User is Admin?) then (yes)
+  :Show Admin Dashboard;
+else (no)
+  :Show Student Dashboard;
+endif
+stop
+@enduml

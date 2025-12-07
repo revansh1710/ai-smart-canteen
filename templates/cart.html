@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+body {
+    background-color: #f4f6f8;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.cart-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 25px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.cart-container h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.cart-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.cart-table th, .cart-table td {
+    padding: 12px 15px;
+    text-align: center;
+}
+
+.cart-table th {
+    background-color: #4CAF50;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 8px;
+}
+
+.cart-table td {
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #ddd;
+}
+
+.cart-table tr:hover td {
+    background-color: #f1fdf1;
+}
+
+.total-container {
+    text-align: right;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.reserve-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 25px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.reserve-button:hover {
+    background-color: #45a049;
+}
+
+.cancel-button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.cancel-button:hover {
+    background-color: #c0392b;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 20px;
+    color: #555;
+    text-decoration: none;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+@media screen and (max-width: 768px) {
+    .cart-table th, .cart-table td {
+        padding: 8px 10px;
+        font-size: 14px;
+    }
+}
+</style>
+
+<div class="cart-container">
+    <h2>🛒 Your Cart</h2>
+
+    {% if reservations %}
+    <table class="cart-table">
+        <tr>
+            <th>Meal</th>
+            <th>Price</th>
+            <th>Time Slot</th>
+            <th>Date</th>
+            <th>Actions</th>
+        </tr>
+        {% for r in reservations %}
+        <tr>
+            <td>{{ r.meal_name }}</td>
+            <td>£{{ '%.2f'|format(r.price) }}</td>
+            <td>{{ r.time_slot }}</td>
+            <td>{{ r.date.strftime('%Y-%m-%d') }}</td>
+            <td>
+                <form method="POST" action="/cancel_reservation">
+                    <input type="hidden" name="res_id" value="{{ r.id }}">
+                    <button type="submit" class="cancel-button">Cancel</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div class="total-container">
+        Total: £{{ total_price }}
+    </div>
+
+    <h3>Select Payment Method</h3>
+
+<form action="/pay" method="POST" style="text-align:center;">
+
+    <!-- Payment Method -->
+    <label>
+        <input type="radio" name="payment_method" value="cash" checked>
+        Cash
+    </label>
+    &nbsp;&nbsp;
+    <label>
+        <input type="radio" name="payment_method" value="card">
+        Card
+    </label>
+
+    <br><br>
+
+    <!-- Card Details -->
+    <div id="card-section" style="display:none; text-align:center;">
+        <input type="text" name="card_number" placeholder="Card Number" maxlength="16"><br><br>
+        <input type="text" name="exp_date" placeholder="Expiry (MM/YY)" maxlength="5"><br><br>
+        <input type="password" name="cvv" placeholder="CVV" maxlength="3"><br><br>
+    </div>
+
+    <input type="hidden" name="amount" value="{{ total_price }}">
+    <button type="submit" class="reserve-button">Pay Now 💳</button>
+</form>
+
+
+    {% else %}
+    <p style="text-align:center; font-size:16px; color:#555;">Your cart is empty!</p>
+    {% endif %}
+
+    <div style="text-align:center;">
+        <a href="/reserve" class="back-link">← Back to Menu</a>
+    </div>
+</div>
+<script>
+document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
+    radio.addEventListener('change', function () {
+        const cardSection = document.getElementById("card-section");
+        const cardInputs = cardSection.querySelectorAll('input');
+
+        if (this.value === "card") {
+            cardSection.style.display = "block";
+            // Make card fields required
+            cardInputs.forEach(input => input.setAttribute('required', 'required'));
+        } else {
+            cardSection.style.display = "none";
+            // Remove required from card fields
+            cardInputs.forEach(input => input.removeAttribute('required'));
+        }
+    });
+});
+</script>
+
+
+{% endblock %}

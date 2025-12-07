@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+.edit-meal-container {
+    max-width: 600px;
+    margin: 40px auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.edit-meal-container h2 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.edit-meal-container label {
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
+}
+
+.edit-meal-container input,
+.edit-meal-container textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.edit-meal-container button {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+.update-btn {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.update-btn:hover {
+    background-color: #e0a800;
+}
+
+.back-btn {
+    background-color: #6c757d;
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.back-btn:hover {
+    background-color: #5a6268;
+}
+</style>
+
+<div class="edit-meal-container">
+    <h2>Edit Meal</h2>
+
+    <form action="" method="POST" enctype="multipart/form-data">
+        <label for="name">Name:</label>
+        <input type="text" name="name" id="name" value="{{ meal.name }}" required>
+
+        <label for="price">Price (£):</label>
+        <input type="number" name="price" id="price" step="0.01" value="{{ meal.price }}" required>
+
+        <label for="desc">Description:</label>
+        <textarea name="desc" id="desc" required>{{ meal.description }}</textarea>
+
+        <label for="stock">Stock:</label>
+        <input type="number" name="stock" id="stock" value="{{ meal.stock }}" required>
+
+        <label for="image">Image:</label>
+        <input type="file" name="image" id="image">
+        <div style="margin-top:10px;">
+            <img src="{{ url_for('static', filename='images/' ~ meal.img) }}" alt="{{ meal.name }}" width="200">
+        </div>
+
+        <button type="submit" class="update-btn">Update Meal</button>
+    </form>
+
+    <a href="{{ url_for('admin_dashboard_menu') }}" class="back-btn">Back to Menu</a>
+</div>
+{% endblock %}

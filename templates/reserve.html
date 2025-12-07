@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+body {
+    background-color: #fafafa;
+}
+.menu-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 30px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.meal-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  text-align: center;
+  padding: 15px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.meal-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.meal-card img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.meal-card h3 {
+  margin-top: 10px;
+  color: #333;
+}
+
+.meal-card p {
+  color: #555;
+  font-size: 15px;
+}
+
+.reserve-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  margin-top: 10px;
+  width: 100%;
+  font-size: 15px;
+}
+.reserve-button:hover {
+  background-color: #45a049;
+}
+
+select, input[type="date"] {
+  width: 100%;
+  padding: 8px;
+  margin-top: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.back-link {
+  display: block;
+  text-align: center;
+  margin: 25px 0;
+  color: #333;
+  text-decoration: none;
+}
+.back-link:hover {
+  text-decoration: underline;
+}
+</style>
+
+<h2 style="text-align:center; margin:30px;">🍽️ Make a Reservation</h2>
+
+<div class="menu-container">
+  {% for meal in meals %}
+  <div class="meal-card">
+    <img src="{{ url_for('static', filename='images/' + meal.img) }}" alt="{{ meal.name }}">
+    <h3>{{ meal.name }}</h3>
+    <p>{{ meal.description }}</p>
+    <p><strong>£{{ '%.2f'|format(meal.price) }}</strong></p>
+    {% if stock_dict[meal.name] > 0 %}
+      <p>Available: {{ stock_dict[meal.name] }} plates</p>
+
+      <form method="POST" action="/add_to_cart">
+        <!-- Corrected input names -->
+        <input type="hidden" name="meal_name" value="{{ meal.name }}">
+        <input type="hidden" name="meal_price" value="{{ meal.price }}">
+
+        <label>Time Slot:</label>
+        <select name="time_slot" required>
+          <option value="12:00">12:00</option>
+          <option value="12:30">12:30</option>
+          <option value="13:00">13:00</option>
+          <option value="13:30">13:30</option>
+        </select>
+
+        <label>Select a date:</label>
+        <input type="date" name="date" required>
+
+        <button type="submit" class="reserve-button">Add to Cart 🛒</button>
+      </form>
+    {% else %}
+      <p style="color:red;">Sold Out</p>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+
+<div style="text-align:center; margin-top:30px;">
+  <a href="/cart" class="back-link">🛒 View Cart & Checkout</a>
+</div>
+<a href="/student" class="back-link">← Back to Dashboard</a>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
+  const minDate = `${yyyy}-${mm}-${dd}`;
+  document.querySelectorAll('input[type="date"]').forEach((input) => {
+    input.setAttribute("min", minDate);
+  });
+});
+</script>
+
+
+
+{% endblock %}

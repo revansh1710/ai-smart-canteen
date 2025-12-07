@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+.menu-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    text-align: center;
+}
+
+.menu-container h2 {
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+}
+
+.menu-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.menu-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.menu-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.menu-card .info {
+    padding: 15px;
+}
+
+.menu-card h4 {
+    margin: 10px 0 5px;
+    color: #333;
+}
+
+.menu-card p {
+    font-size: 14px;
+    color: #666;
+}
+
+.price {
+    font-weight: bold;
+    color: #2b7a0b;
+    margin-top: 10px;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 30px;
+    text-decoration: none;
+    color: #333;
+    border: 1px solid #ccc;
+    padding: 8px 16px;
+    border-radius: 6px;
+}
+
+.back-link:hover {
+    background-color: #f0f0f0;
+}
+</style>
+
+<div class="menu-container">
+    <h2>Our Menu</h2>
+    {% if is_admin %}
+<a href="/admin/menu/add" class="admin-btn btn-add">Add New Meal</a>
+{% endif %}
+
+    <div class="menu-grid">
+        {% for meal in meals %}
+<div class="menu-card">
+    <img src="{{ url_for('static', filename='images/' ~ meal.img) }}" alt="{{ meal.name }}">
+    <div class="info">
+        <h4>{{ meal.name }}</h4>
+        <p>{{ meal.description }}</p> <!-- field name must match model -->
+        <div class="price">£{{ '%.2f'|format(meal.price) }}</div>
+        <div class="stock">
+            {% if stock_dict[meal.name] > 0 %}
+                🟢 Available plates: {{ stock_dict[meal.name] }}
+            {% else %}
+                🔴 Sold Out
+            {% endif %}
+        </div>
+
+        {% if is_admin %}
+        <div class="mt-2">
+            <a href="/admin/menu/edit/{{ meal.id }}" class="admin-btn btn-edit">Edit</a>
+            <form action="/admin/menu/delete/{{ meal.id }}" method="POST" style="display:inline;">
+                <button type="submit" class="admin-btn btn-delete"
+                        onclick="return confirm('Delete this meal?')">Delete</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}
+
+    </div>
+    <a href="{% if is_admin %}/admin{% else %}/student{% endif %}" class="admin-btn btn-back">Dashboard</a>
+{% if not is_admin %}
+<a href="/reserve" class="back-link">Reserve a Meal</a>
+{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="dashboard-container">
+   <div class="dashboard-header">
+    <h2 class="dashboard-title">Admin Dashboard</h2>
+    <div class="dashboard-actions">
+        <a href="/admin/menu" class="btn manage-menu-btn">
+            <i class="fas fa-utensils"></i> Manage Menu
+        </a>
+        <a href="/logout" class="btn logout-button">Logout</a>
+    </div>
+</div>
+
+
+
+    <h3>All Reservations</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>User</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>Meal</th>
+                <th>Price (£)</th>
+                <th>Date</th>
+                <th>Time Slot</th>
+                <th>Status</th>
+                <th>Payment</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in reservations %}
+            <tr>
+                <td>{{ r.id }}</td>
+                <td>{{ r.user.first_name }} {{ r.user.last_name }}</td>
+                <td>{{ r.user.email }}</td>
+                <td>{{ r.user.mobile }}</td>
+                <td>{{ r.meal_name }}</td>
+                <td>£{{ '%.2f'|format(r.price) }}</td>
+                <td>{{ r.date.strftime('%Y-%m-%d') if r.date else 'N/A' }}</td>
+                <td>{{ r.time_slot }}</td>
+                <td class="status-col">{{ r.status }}</td>
+                <td>{{ r.payment_method }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<style>
+/* ✅ Updated styles to match your actual class names */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between; /* pushes title left, buttons right */
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 2px solid #e0e0e0;
+    margin-bottom: 25px;
+    flex-wrap: wrap; /* allow wrapping if screen is small */
+}
+
+.dashboard-title {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.dashboard-actions {
+    display: flex;
+    gap: 12px; /* space between buttons */
+    flex-wrap: wrap; /* ensure buttons don’t overlap */
+}
+
+.dashboard-actions a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px; /* icon + text spacing */
+    padding: 10px 20px;
+    font-size: 1rem;
+    text-decoration: none;
+}
+
+.manage-menu-btn {
+    background: linear-gradient(135deg, #4a90e2, #357ab7);
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.manage-menu-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+    background: linear-gradient(135deg, #357ab7, #4a90e2);
+}
+
+.logout-button {
+    background: linear-gradient(135deg, #dc3545, #b02a37);
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 8px 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.logout-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+    background: linear-gradient(135deg, #b02a37, #dc3545);
+}
+
+
+
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    function updateReservation(url, button) {
+        const resId = button.dataset.id;
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ res_id: resId })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const row = button.closest('tr');
+                row.querySelector('.status-col').innerText = data.status;
+                row.querySelector('td:last-child').innerHTML = '-';
+            } else {
+                alert('Failed to update status');
+            }
+        })
+        .catch(err => console.error(err));
+    }
+
+    document.querySelectorAll('.approve-btn').forEach(btn => {
+        btn.addEventListener('click', () => updateReservation('/approve_reservation', btn));
+    });
+
+    document.querySelectorAll('.reject-btn').forEach(btn => {
+        btn.addEventListener('click', () => updateReservation('/reject_reservation', btn));
+    });
+});
+</script>
+
+{% endblock %}
+
+

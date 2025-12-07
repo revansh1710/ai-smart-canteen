@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+.dashboard-container {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 20px;
+}
+
+.dashboard-container h2, .dashboard-container h3 {
+    color: #333;
+}
+
+.logout-button, .reserve-button, .predict-button, .cancel-button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.logout-button {
+    background-color: #f44336;
+    color: white;
+    float: right;
+}
+
+.reserve-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.primary-button,
+.secondary-button {
+    display: inline-block;
+    text-decoration: none; /* removes underline */
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    color: white;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Main reservation button - rich blue tone */
+.primary-button {
+    background: linear-gradient(90deg, #0072ff, #00c6ff);
+}
+
+.primary-button:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(90deg, #0056cc, #00aaff);
+    box-shadow: 0 6px 12px rgba(0, 114, 255, 0.3);
+}
+
+/* View Menu button - warm contrast */
+.secondary-button {
+    background: linear-gradient(90deg, #ff7a18, #ffb347);
+}
+
+.secondary-button:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(90deg, #ff8c42, #ffc56e);
+    box-shadow: 0 6px 12px rgba(255, 122, 24, 0.3);
+}
+
+
+.predict-button {
+    background-color: #2196F3;
+    color: white;
+}
+
+.cancel-button {
+    background-color: #ff9800;
+    color: white;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ccc;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+</style>
+
+<div class="dashboard-container">
+    <h2>Welcome {{ user.first_name }} {{ user.last_name }}!</h2>
+    <a class="logout-button" href="/logout">Logout</a>
+
+    <h3>My Reservations</h3>
+
+    {% if reservations %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th><th>Meal</th><th>Price (£)</th><th>Date</th><th>Time Slot</th><th>Status</th><th>Payment</th><th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in reservations %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ r.meal_name }}</td>
+                <td>£{{ '%.2f'|format(r.price) }}</td>
+                <td>{{ r.date.strftime('%Y-%m-%d') if r.date else 'N/A' }}</td>
+                <td>{{ r.time_slot }}</td>
+                <td>{{ r.status }}</td>
+                <td>{{ r.payment_method }}</td>
+                <td>
+                    <form method="POST" action="/cancel_reservation">
+                        <input type="hidden" name="res_id" value="{{ r.id }}">
+                        <button type="submit" class="cancel-button" onclick="return confirm('Cancel this reservation?')">Cancel</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td><strong>Total</strong></td>
+                <td><strong>£{{ '%.2f'|format(total_price) }}</strong></td>
+                <td colspan="5"></td>
+            </tr>
+        </tfoot>
+    </table>
+    {% else %}
+        <p>No reservations yet.</p>
+    {% endif %}
+
+    <div class="reserve-section">
+        <h3>Reserve a Meal</h3>
+        <div class="reserve-buttons">
+          <!-- <a href="/reserve" class="primary-button">🍽️ Make a Reservation</a> -->
+            <a href="/reserve" class="secondary-button">📋 View Menu</a>
+        </div>
+    </div>
+
+    <div class="ml-predictions-container">
+    <h3 class="section-title">ML Predictions</h3>
+    <div class="prediction-grid">
+
+        <!-- Popular Meals Card -->
+        <div class="prediction-card">
+            <h4 class="card-title"><i class="fas fa-utensils"></i> Predicted Popular Meals</h4>
+            <ul>
+                {% if prediction_popular %}
+                    {% for meal, count in prediction_popular %}
+                        <li>{{ meal }} — approx {{ count }} orders</li>
+                    {% endfor %}
+                {% else %}
+                    <li>Not enough data to predict popular meals.</li>
+                {% endif %}
+            </ul>
+        </div>
+
+        <!-- Rush Hours Card -->
+        <div class="prediction-card">
+            <h4 class="card-title"><i class="fas fa-clock"></i> Predicted Rush Hours</h4>
+            <ul>
+                {% if prediction_rush %}
+                    {% for slot, count in prediction_rush %}
+                        <li>{{ slot }} — approx {{ count }} reservations</li>
+                    {% endfor %}
+                {% else %}
+                    <li>Not enough data to predict rush hour.</li>
+                {% endif %}
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+<style>
+.ml-predictions-container {
+    margin: 30px 0;
+}
+.section-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #333;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 5px;
+}
+.prediction-grid {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.prediction-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    padding: 20px;
+    flex: 1 1 300px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.prediction-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+}
+.card-title {
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: #444;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.card-title i {
+    color: #1e90ff; /* Blue for ML predictions */
+}
+.prediction-card ul {
+    list-style: none;
+    padding-left: 0;
+}
+.prediction-card li {
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+    color: #555;
+}
+.prediction-card li:last-child {
+    border-bottom: none;
+}
+</style>
+
+
+
+
+</div>
+
+
+{% endblock %}

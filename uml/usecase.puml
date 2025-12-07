@@ -1,0 +1,11 @@
+@startuml
+actor Student
+actor Admin
+rectangle "AI Smart Canteen System" {
+    Student --> (Login)
+    Student --> (Reserve Meal)
+    Student --> (View Meal Prediction)
+    Admin --> (Login)
+    Admin --> (View Reservations)
+}
+@enduml

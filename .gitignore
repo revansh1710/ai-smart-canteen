@@ -1,0 +1,24 @@
+# Python byte-code files
+*.pyc
+__pycache__/
+
+# Virtual environment
+venv/
+.venv/
+
+# Application-specific ignored files
+.env
+.flaskenv
+instance/
+*.log
+*.sqlite
+/migrations
+
+# IDE-specific files (optional, can be added globally)
+.idea/
+.vscode/
+.DS_Store # macOS specific
+
+# Build artifacts
+dist/
+build/

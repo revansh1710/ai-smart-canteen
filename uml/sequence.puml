@@ -1,0 +1,8 @@
+@startuml
+Student -> System: Login
+System -> Student: Dashboard
+Student -> System: Reserve Meal
+System -> Database: Save Reservation
+Database --> System: Success
+System --> Student: Confirmation
+@enduml
