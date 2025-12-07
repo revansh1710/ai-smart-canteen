@@ -1,24 +1,33 @@
-# Python byte-code files
-*.pyc
+# Byte-compiled / optimized / DLL files
 __pycache__/
+*.pyc
+*.pyd
+*.pyo
+*.egg-info/
+.eggs/
 
 # Virtual environment
 venv/
 .venv/
+env/
+.env/
+pip-wheel-metadata/
 
-# Application-specific ignored files
-.env
-.flaskenv
-instance/
-*.log
-*.sqlite
-/migrations
-
-# IDE-specific files (optional, can be added globally)
-.idea/
-.vscode/
-.DS_Store # macOS specific
-
-# Build artifacts
+# Distribution / build files
 dist/
 build/
+*.whl
+
+# Flask stuff
+instance/
+.webassets-cache
+# Flask session files, if using flask-session extension with file storage
+/*_session/
+
+# Editors and OS files
+.DS_Store # macOS
+.vscode/ # VS Code configuration, consider if team-specific
+
+# Sensitive / Configuration files
+.env # Environment variables file, highly recommended to ignore
+config.pyc
