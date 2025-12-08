@@ -11,8 +11,6 @@ from flask import request, redirect, render_template, session, flash, url_for
 from models import db, Meal
 from flask_migrate import Migrate
 import os
-from dotenv import load_dotenv
-load_dotenv()
 
 meal_data = [
     {"name": "Chicken Biryani", "price": 8.50, "img": "chicken_biryani.jpg", "desc": "Spicy and flavorful rice with tender chicken pieces.", "initial_stock": 10},
@@ -30,9 +28,9 @@ meal_data = [
 ]
 
 app = Flask(__name__)
-app.secret_key = os.getenv('secret_key')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.getenv('SQLALCHEMY_TRACK_MODIFICATIONS')
+app.secret_key = os.environ.get('secret_key')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.environ.get('SQLALCHEMY_TRACK_MODIFICATIONS')
 db.init_app(app)
 migrate = Migrate(app, db)
 
